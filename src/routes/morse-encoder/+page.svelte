@@ -1,6 +1,6 @@
 <script lang="ts">
     import type { Snapshot } from "./$types";
-    import { encode } from "./lib";
+    import { decode, encode } from "./lib";
 
     // should save to localstorage
     export const snapshot: Snapshot = {
@@ -8,9 +8,9 @@
             return { configString, morse, text };
         },
         restore(save) {
-            configString = save.configString
-            morse = save.morse
-            text = save.text
+            configString = save.configString;
+            morse = save.morse;
+            text = save.text;
         },
     };
 
@@ -32,13 +32,24 @@
 
     let morse = "";
     let text = "";
-    let isError = false;
+    let error = "";
 
-    $: try {
-        isError = false;
-        morse = encode(text, config);
-    } catch {
-        isError = true;
+    function updateMorse() {
+        try {
+            error = "";
+            morse = encode(text, config);
+        } catch {
+            error = "Unsupported character";
+        }
+    }
+
+    function updateText() {
+        try {
+            error = "";
+            text = decode(morse, config);
+        } catch (e) {
+            error = (e as Error).message;
+        }
     }
 </script>
 
@@ -86,17 +97,27 @@
 <section>
     <div>
         <label for="input"> Text </label>
-        <textarea bind:value={text} name="text" id="text" cols="50" rows="5"
+        <textarea
+            bind:value={text}
+            on:input={updateMorse}
+            name="text"
+            id="text"
+            cols="50"
+            rows="5"
         ></textarea>
     </div>
     <div>
         <label for="input"> Morse </label>
-        <textarea bind:value={morse} name="morse" id="morse" cols="50" rows="5"
+        <textarea
+            bind:value={morse}
+            on:input={updateText}
+            name="morse"
+            id="morse"
+            cols="50"
+            rows="5"
         ></textarea>
     </div>
-    {#if isError}
-        <p>Unsupported character</p>
-    {/if}
+    <p>{error}</p>
 </section>
 
 <style>
