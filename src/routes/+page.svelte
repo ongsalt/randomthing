@@ -4,6 +4,7 @@
     
     <ul>
         <li> <a href="/morse-encoder">Morse encoder</a> </li>
+        <li> <a href="/medium-image-viewer">Medium-like fullscreen image viewer</a> </li>
     </ul>
 </main>
 
