@@ -116,6 +116,7 @@ export function decode(morse: string, { dashes, dots, letterSpacing, wordSpacing
     for (const word of words) {
         const letters = word.split(SPLITTER2)
         for (const letter of letters) {
+            // todo: detect illegal character with /^(\.|-)/
             const c = invertedMorseCodeMap[letter]
             if (c === undefined) {
                 throw new Error("Unknown morse pattern")

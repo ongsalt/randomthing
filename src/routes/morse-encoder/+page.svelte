@@ -1,6 +1,6 @@
 <script lang="ts">
+    import { decode, encode } from "$lib/morse";
     import type { Snapshot } from "./$types";
-    import { decode, encode } from "./lib";
 
     // should save to localstorage
     export const snapshot: Snapshot = {
