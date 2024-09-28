@@ -49,11 +49,14 @@ export class Spring implements Animatable {
     snapTo(target: number): void {
         this.value = target
         this.valueWritable.set(target)
+        this.velocity = 0
     }
 
-    animateTo(target: number, initialVelocity: number = this.velocity): void {
+    animateTo(target: number, initialVelocity: number | null = null): void {
         this.target = target
-        this.velocity = initialVelocity
+        if (initialVelocity !== null) {
+            this.velocity = initialVelocity
+        }
 
         let lastRunTimestamp = performance.now()
         const onFrame = () => {
@@ -63,15 +66,17 @@ export class Spring implements Animatable {
 
             this.update(dt)
             if (this.shouldStopAnimation()) {
-                this.value = this.target
-                this.velocity = 0
-                this.valueWritable.set(this.target)
+                this.snapTo(this.target)
+                this.isAnimating = false
             } else {
                 requestAnimationFrame(onFrame)
             }
         }
 
-        onFrame()
+        if (!this.isAnimating) {
+            onFrame()
+            this.isAnimating = true
+        }
     }
 
     getTarget(): number {
@@ -79,6 +84,7 @@ export class Spring implements Animatable {
     }
 
     // Literal copy of https://cs.android.com/androidx/platform/frameworks/support/+/androidx-main:compose/animation/animation-core/src/commonMain/kotlin/androidx/compose/animation/core/SpringSimulation.kt;l=1;drc=e2c11e9a69bb27854ba4355c6a5a97148a46eb4f
+    // TODO: derived this mathematically myself
     private update(dt: number) {
         const adjustedDisplacement = this.value - this.target
         const deltaT = dt / 1000.0 // unit: seconds

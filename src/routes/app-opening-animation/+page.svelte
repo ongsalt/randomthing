@@ -1,13 +1,13 @@
 <script lang="ts">
     import { Spring } from "$lib/animation/spring";
 
-    const xAnimator = new Spring(0, 200, .9);
+    const xAnimator = new Spring(0, 100, .2);
     const x = xAnimator.getReadable();
 
-    const yAnimator = new Spring(0, 200, .9);
+    const yAnimator = new Spring(0, 100, .2);
     const y = yAnimator.getReadable();
 
-    function onClick(event: MouseEvent) {
+    function setTarget(event: MouseEvent) {
         xAnimator.animateTo(event.clientX)
         yAnimator.animateTo(event.clientY)
     }
@@ -17,7 +17,7 @@
 
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
-<main on:click={onClick}>
+<main on:click={setTarget}>
     <div class="box" style={positionCss}></div>
 </main>
 

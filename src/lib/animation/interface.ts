@@ -5,5 +5,5 @@ export interface Animatable {
     getReadable(): Readable<number>
     getValue(): number
     snapTo(target: number): void
-    animateTo(target: number, initialVelocity: number): void
+    animateTo(target: number, initialVelocity: number | null): void
 }
