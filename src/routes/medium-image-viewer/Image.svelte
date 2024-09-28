@@ -37,6 +37,7 @@
     }
 
     function resetRect() {
+        onScroll()
         const rects = container.getClientRects();
         left = rects[0].left;
         top = rects[0].top;
