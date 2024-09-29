@@ -4,6 +4,7 @@ import { vec2d, type Vec2d } from "$lib/animation/utils"
 type StartListener = (position: Vec2d) => unknown
 type ReleaseListener = (position: Vec2d, velocity: Vec2d, displacement: Vec2d) => unknown
 
+// TODO: touch input e.g. pen tablet, touchscreen, ...
 export class GestureHandler {
     isDragging = false
     x: number = 0
@@ -34,7 +35,7 @@ export class GestureHandler {
             listener(vec2d(this.x, this.y))
         }
         this.offsetX = event.clientX - this.x
-        this.offsetY = event.clientY - this.y
+        this.offsetY = (window.innerHeight - event.clientY) - this.y
         this.initialX = this.x
         this.initialY = this.y
         this.xVelocity = 0
@@ -52,9 +53,9 @@ export class GestureHandler {
         this.lastPointerEventTimestamp = now
 
         this.xVelocity = (event.clientX - this.x - this.offsetX) / dt
-        this.yVelocity = (event.clientY - this.y - this.offsetY) / dt
+        this.yVelocity = ((window.innerHeight - event.clientY) - this.y - this.offsetY) / dt
         this.x = event.clientX - this.offsetX
-        this.y = event.clientY - this.offsetY
+        this.y = window.innerHeight - event.clientY - this.offsetY
 
         for (const listener of this.onDragListeners) {
             const position = vec2d(this.x, this.y)

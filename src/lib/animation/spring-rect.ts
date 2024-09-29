@@ -29,12 +29,14 @@ export class SpringRect {
         return this.rect
     }
 
-    animateTo(target: Rect, initialVelocity: Vec2d | null = null) {
+    animateTo(target: Rect, initialVelocity: Vec2d | null = null, scalingFactor = 600) {
         this.x.animateTo(target.x, initialVelocity?.x ?? null)
         this.y.animateTo(target.y, initialVelocity?.y ?? null)
         // should i do the same for height animation
-        this.width.animateTo(target.width)
-        this.height.animateTo(target.height)
+        const dyByDt = initialVelocity?.y ?? null
+        const initialScalingSpeed = dyByDt ? -Math.abs(dyByDt / scalingFactor) : null
+        this.width.animateTo(target.width, initialScalingSpeed)
+        this.height.animateTo(target.height, initialScalingSpeed)
     }
 
     moveTo({ x, y }: Vec2d) {

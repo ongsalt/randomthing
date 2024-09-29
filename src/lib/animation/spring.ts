@@ -136,6 +136,6 @@ export class Spring implements Animatable {
     }
 
     private shouldStopAnimation(): boolean {
-        return Math.abs(this.value - this.target) < 0.1 && Math.abs(this.velocity) < 0.1
+        return Math.abs(this.value - this.target) <= .1 && Math.abs(this.velocity) <= .1
     }
 }

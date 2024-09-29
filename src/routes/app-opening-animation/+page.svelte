@@ -4,10 +4,14 @@
     import { SpringRect } from "$lib/animation/spring-rect";
     import { vec2d } from "$lib/animation/utils";
 
+    /**
+     * Note that everything is bottom anchored
+     */
+
     let scalingFactor = 600
     const iconBound: Rect = {
-        x: 100,
-        y: 100,
+        x: 60,
+        y: 600,
         height: 50,
         width: 50,
     };
@@ -23,7 +27,8 @@
 
     const boxAnimator = new SpringRect(iconBound);
     const box = boxAnimator.getReadable();
-    $: boxStyle = `top: ${$box.y}px; left: ${$box.x}px; width: ${$box.width}px; height: ${$box.height}px`;
+    // TOD: handle negative size better
+    $: boxStyle = `bottom: ${$box.y}px; left: ${$box.x}px; width: ${Math.abs($box.width)}px; height: ${Math.abs($box.height)}px`;
     const gestureHandler = new GestureHandler();
 
     gestureHandler.addBeforeStartListener(() => {
@@ -34,13 +39,11 @@
     gestureHandler.addOnDragListener((position, _, displacement) => {
         if (!isTargetHome) {
             // TODO: proper mapping and decaying
-            const scale = 1 + displacement.y / scalingFactor;
+            const scale = 1 - displacement.y / scalingFactor;
             const size = vec2d(appBound.width, appBound.height).multiply(scale);
             boxAnimator.setSize(size);
-            // anchor bottom center
-            // TODO: make gesture handler use this mapped position for velocity calculation
             position.x += (-(scale - 1) * appBound.width) / 2;
-            position.y += -(scale - 1) * appBound.height;
+            // position.y += -(scale - 1) * appBound.height;
             boxAnimator.moveTo(position);
         } else {
             boxAnimator.moveTo(position);
@@ -52,9 +55,9 @@
 
         isTargetHome = !isTargetHome;
         if (isTargetHome) {
-            boxAnimator.animateTo(iconBound, velocity);
+            boxAnimator.animateTo(iconBound, velocity, scalingFactor / 100);
         } else {
-            boxAnimator.animateTo(appBound, velocity);
+            boxAnimator.animateTo(appBound, velocity, scalingFactor / 100);
         }
     });
 
@@ -123,8 +126,10 @@
         display: grid;
         grid-template-columns: 1fr auto;
     }
+
     .box {
         position: fixed;
+        /* bottom: 0; */
         background: #e3e3e3;
         /* pointer-events: none; */
     }
