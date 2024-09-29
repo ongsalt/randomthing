@@ -20,6 +20,7 @@ import { writable, type Readable, type Writable } from "svelte/store";
  * 
  * Fuck all of these im gonna use google implementation(in androidx.animation.animation-core SpringSimulation.kt)
  *
+ * Bruhhhhhh svelte/motion already implement this
  */
 
 export class Spring implements Animatable {
@@ -61,7 +62,7 @@ export class Spring implements Animatable {
         let lastRunTimestamp = performance.now()
         const onFrame = () => {
             const now = performance.now()
-            const dt = now - lastRunTimestamp 
+            const dt = now - lastRunTimestamp
             lastRunTimestamp = now
 
             this.update(dt)
