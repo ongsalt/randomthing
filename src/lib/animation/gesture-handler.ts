@@ -28,6 +28,10 @@ export class GestureHandler {
     }
 
     onPointerDown(event: PointerEvent) {
+        if (this.isDragging) {
+            return
+        }
+        
         event.preventDefault()
         this.lastPointerEventTimestamp = performance.now()
         this.isDragging = true

@@ -5,6 +5,7 @@
     <ul>
         <li> <a href="/morse-encoder">Morse encoder</a> </li>
         <li> <a href="/medium-image-viewer">Medium-like fullscreen image viewer</a> </li>
+        <li> <a href="/spring">Spring based animation</a> </li>
         <li> <a href="/app-opening-animation">App opening animation</a> </li>
     </ul>
 </main>

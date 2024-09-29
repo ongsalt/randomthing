@@ -88,6 +88,7 @@
         </div>
     </section>
     <section class="control">
+        <p> try dragging thing around </p>
         <h2>Settings</h2>
         <!-- <button> home </button> -->
         <!-- <button> app </button> -->
@@ -107,7 +108,7 @@
             width:<input type="number" bind:value={appBound.width} /><br />
             height:<input type="number" bind:value={appBound.height} /><br />
         </div>
-        <p> settings will be applied next time </p>
+        <p> settings will be applied next time you toggle </p>
         <hr />
         <h2>Status</h2>
         <p>
