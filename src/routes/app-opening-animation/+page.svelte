@@ -1,6 +1,7 @@
 <script lang="ts">
     import { GestureHandler } from "$lib/animation/gesture-handler";
     import type { Rect } from "$lib/animation/interface";
+    import { Spring } from "$lib/animation/spring";
     import { SpringRect } from "$lib/animation/spring-rect";
     import { vec2d } from "$lib/animation/utils";
 
@@ -8,13 +9,14 @@
      * Note that everything is bottom anchored
      */
 
-    let scalingFactor = 600
+    let scalingFactor = 750;
     const iconBound: Rect = {
         x: 60,
         y: 600,
         height: 50,
         width: 50,
     };
+    let iconBorderRadius = 10
 
     const appBound: Rect = {
         x: 20,
@@ -22,13 +24,18 @@
         width: 300,
         height: 700,
     };
+    let appBorderRadius = 42
 
     let isTargetHome = true;
 
-    const boxAnimator = new SpringRect(iconBound);
+    const stiffness = 225
+    const dampingRatio = .95
+    const boxAnimator = new SpringRect(iconBound, stiffness, dampingRatio);
+    const borderRadiusAnimator = new Spring(iconBorderRadius, stiffness, dampingRatio);
+    const borderRadius = borderRadiusAnimator.getReadable();
     const box = boxAnimator.getReadable();
     // TOD: handle negative size better
-    $: boxStyle = `bottom: ${$box.y}px; left: ${$box.x}px; width: ${Math.abs($box.width)}px; height: ${Math.abs($box.height)}px`;
+    $: boxStyle = `bottom: ${$box.y}px; left: ${$box.x}px; width: ${Math.abs($box.width)}px; height: ${Math.abs($box.height)}px; border-radius: ${$borderRadius}px`;
     const gestureHandler = new GestureHandler();
 
     gestureHandler.addBeforeStartListener(() => {
@@ -44,6 +51,7 @@
             boxAnimator.setSize(size);
             position.x += (-(scale - 1) * appBound.width) / 2;
             // position.y += -(scale - 1) * appBound.height;
+            borderRadiusAnimator.snapTo(appBorderRadius * scale);
             boxAnimator.moveTo(position);
         } else {
             boxAnimator.moveTo(position);
@@ -55,9 +63,11 @@
 
         isTargetHome = !isTargetHome;
         if (isTargetHome) {
-            boxAnimator.animateTo(iconBound, velocity, scalingFactor / 100);
+            boxAnimator.animateTo(iconBound, velocity, scalingFactor / 50);
+            borderRadiusAnimator.animateTo(iconBorderRadius);
         } else {
-            boxAnimator.animateTo(appBound, velocity, scalingFactor / 100);
+            boxAnimator.animateTo(appBound, velocity, scalingFactor / 50);
+            borderRadiusAnimator.animateTo(appBorderRadius);
         }
     });
 
@@ -65,8 +75,10 @@
         isTargetHome = !isTargetHome;
         if (isTargetHome) {
             boxAnimator.animateTo(iconBound);
+            borderRadiusAnimator.animateTo(iconBorderRadius);
         } else {
             boxAnimator.animateTo(appBound);
+            borderRadiusAnimator.animateTo(appBorderRadius);
         }
     }
 </script>
@@ -88,11 +100,11 @@
         </div>
     </section>
     <section class="control">
-        <p> try dragging thing around </p>
+        <p>try dragging thing around</p>
         <h2>Settings</h2>
         <!-- <button> home </button> -->
         <!-- <button> app </button> -->
-        <button on:click={toggle}> toggle </button> <br>
+        <button on:click={toggle}> toggle </button> <br />
         scaling factor:<input type="number" bind:value={scalingFactor} />
         <div>
             <h3>Icon bound</h3>
@@ -108,7 +120,7 @@
             width:<input type="number" bind:value={appBound.width} /><br />
             height:<input type="number" bind:value={appBound.height} /><br />
         </div>
-        <p> settings will be applied next time you toggle </p>
+        <p>settings will be applied next time you toggle</p>
         <hr />
         <h2>Status</h2>
         <p>
