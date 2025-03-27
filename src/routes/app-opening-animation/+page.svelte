@@ -9,21 +9,21 @@
      * Note that everything is bottom anchored
      */
 
-    let scalingFactor = 750;
-    const iconBound: Rect = {
+    let scalingFactor = $state(750);
+    const iconBound: Rect = $state({
         x: 60,
         y: 600,
         height: 50,
         width: 50,
-    };
+    });
     let iconBorderRadius = 10
 
-    const appBound: Rect = {
+    const appBound: Rect = $state({
         x: 20,
         y: 20,
         width: 300,
         height: 700,
-    };
+    });
     let appBorderRadius = 42
 
     let isTargetHome = true;
@@ -35,8 +35,8 @@
     const borderRadius = borderRadiusAnimator.getReadable();
     const box = boxAnimator.getReadable();
     // TOD: handle negative size better
-    $: boxStyle = `bottom: ${$box.y}px; left: ${$box.x}px; width: ${Math.abs($box.width)}px; height: ${Math.abs($box.height)}px; border-radius: ${$borderRadius}px`;
-    const gestureHandler = new GestureHandler();
+    let boxStyle = $derived(`bottom: ${$box.y}px; left: ${$box.x}px; width: ${Math.abs($box.width)}px; height: ${Math.abs($box.height)}px; border-radius: ${$borderRadius}px`);
+    const gestureHandler = $state(new GestureHandler());
 
     gestureHandler.addBeforeStartListener(() => {
         gestureHandler.x = $box.x;
@@ -83,18 +83,18 @@
     }
 </script>
 
-<!-- svelte-ignore a11y-click-events-have-key-events -->
-<!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
+<!-- svelte-ignore a11y_click_events_have_key_events -->
+<!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
 <main>
     <section
         class="display"
-        on:pointerup={gestureHandler.onPointerUp}
-        on:pointermove={gestureHandler.onPointerMove}
+        onpointerup={gestureHandler.onPointerUp}
+        onpointermove={gestureHandler.onPointerMove}
     >
         <div
             class="box"
             style={boxStyle}
-            on:pointerdown={gestureHandler.onPointerDown}
+            onpointerdown={gestureHandler.onPointerDown}
         >
             <!-- never gonna give you up -->
         </div>
@@ -104,7 +104,7 @@
         <h2>Settings</h2>
         <!-- <button> home </button> -->
         <!-- <button> app </button> -->
-        <button on:click={toggle}> toggle </button> <br />
+        <button onclick={toggle}> toggle </button> <br />
         scaling factor:<input type="number" bind:value={scalingFactor} />
         <div>
             <h3>Icon bound</h3>

@@ -1,18 +1,22 @@
 <script lang="ts">
     import { onDestroy, onMount } from "svelte";
 
-    export let src: string;
-    export let alt: string = "test";
-    export let expanded = false;
+    interface Props {
+        src: string;
+        alt?: string;
+        expanded?: boolean;
+    }
 
-    let container: HTMLDivElement;
-    let left = 0;
-    let top = 0;
-    let scrollX = 0;
-    let scrollY = 0;
+    let { src, alt = "test", expanded = $bindable(false) }: Props = $props();
 
-    $: expandedStyles = `width: 100vw; border-radius: 0; z-index: 999;left: ${scrollX - left}px; top: ${scrollY - top}px`;
-    $: style = expanded ? expandedStyles : "";
+    let container: HTMLDivElement = $state();
+    let left = $state(0);
+    let top = $state(0);
+    let scrollX = $state(0);
+    let scrollY = $state(0);
+
+    let expandedStyles = $derived(`width: 100vw; border-radius: 0; z-index: 999;left: ${scrollX - left}px; top: ${scrollY - top}px`);
+    let style = $derived(expanded ? expandedStyles : "");
 
     onMount(() => {
         resetRect();
@@ -48,11 +52,11 @@
     }
 </script>
 
-<!-- svelte-ignore a11y-click-events-have-key-events -->
-<!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
-<!-- svelte-ignore a11y-role-supports-aria-props -->
+<!-- svelte-ignore a11y_click_events_have_key_events -->
+<!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
+<!-- svelte-ignore a11y_role_supports_aria_props -->
 <div bind:this={container}>
-    <img {style} {src} {alt} on:click={toggle} aria-expanded={expanded} />
+    <img {style} {src} {alt} onclick={toggle} aria-expanded={expanded} />
 </div>
 
 <style>

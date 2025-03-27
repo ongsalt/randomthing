@@ -14,25 +14,25 @@
         },
     };
 
-    let configString = {
+    let configString = $state({
         dot: ".",
         dash: "-",
         separator: " ",
         letterSpacing: "1",
         wordSpacing: "2",
-    };
+    });
 
-    $: config = {
+    let config = $derived({
         dots: configString.dot.split(","),
         dashes: configString.dash.split(","),
         separators: configString.separator.split(","),
         letterSpacing: parseInt(configString.letterSpacing),
         wordSpacing: parseInt(configString.wordSpacing),
-    };
+    });
 
-    let morse = "";
-    let text = "";
-    let error = "";
+    let morse = $state("");
+    let text = $state("");
+    let error = $state("");
 
     function updateMorse() {
         try {
@@ -99,7 +99,7 @@
         <label for="input"> Text </label>
         <textarea
             bind:value={text}
-            on:input={updateMorse}
+            oninput={updateMorse}
             name="text"
             id="text"
             cols="50"
@@ -110,7 +110,7 @@
         <label for="input"> Morse </label>
         <textarea
             bind:value={morse}
-            on:input={updateText}
+            oninput={updateText}
             name="morse"
             id="morse"
             cols="50"

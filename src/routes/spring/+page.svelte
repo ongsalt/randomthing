@@ -12,12 +12,12 @@
         yAnimator.animateTo(event.clientY)
     }
 
-    $: positionCss = `top: ${$y}px; left: ${$x}px;`
+    let positionCss = $derived(`top: ${$y}px; left: ${$x}px;`)
 </script>
 
-<!-- svelte-ignore a11y-click-events-have-key-events -->
-<!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
-<main on:pointerdown={reposition}>
+<!-- svelte-ignore a11y_click_events_have_key_events -->
+<!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
+<main onpointerdown={reposition}>
     <div class="box" style={positionCss}></div>
     <p> Try clicking somewhere in this page </p>
 </main>
